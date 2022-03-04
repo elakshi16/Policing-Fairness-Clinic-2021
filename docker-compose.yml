@@ -10,3 +10,5 @@ services:
       dockerfile: ./Dockerfile
     volumes:
       - ./out:/usr/src/out
+    ports:
+      - "8888:8888"
