@@ -9,6 +9,6 @@ services:
       context: .
       dockerfile: ./Dockerfile
     volumes:
-      - ./out:/usr/src/out
+      - ./app:/usr/src/app/
     ports:
       - "8888:8888"

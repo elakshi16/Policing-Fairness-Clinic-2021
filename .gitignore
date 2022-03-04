@@ -1,1 +1,13 @@
-/out/
+/app/out/
+.pyc
+# jupyter notebooks
+.ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/

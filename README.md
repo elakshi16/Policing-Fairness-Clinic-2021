@@ -8,7 +8,7 @@ Docker environment for running policing-fairness clinic models.
     
 2. `docker-compose up`
     
-3. Follow URL provided in terminal. password: `policing`
+3. In browser navigate to `localhost:8888` password: `policing`
 
 **Steps to end session**
 1. `Ctrl+C` to close docker container
