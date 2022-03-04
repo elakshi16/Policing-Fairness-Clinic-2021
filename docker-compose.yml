@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  pf_app:
+    image: policing_fairness
+    tty: true
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./out:/usr/src/out
