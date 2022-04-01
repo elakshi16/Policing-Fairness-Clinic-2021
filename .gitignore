@@ -1,4 +1,5 @@
 /app/out/
+/app/__pychache__/
 .pyc
 # jupyter notebooks
 .ipynb_checkpoints

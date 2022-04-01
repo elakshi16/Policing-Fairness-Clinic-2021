@@ -31,6 +31,7 @@ class Node:
     self.center_lon = (bound_box['min_lon'] + bound_box['max_lon']) / 2
     self.pd_reports = records
     self.population = pop
+    self.precinct_ID = 0
 
   def __repr__(self):
     return(f"id: {self.ID} , @({self.center_lat},{self.center_lon}), report_cnt = {len(self.pd_reports)}")
@@ -39,6 +40,7 @@ class Graph:
   def __init__(self, bound_size=150, data_path= DATA_PATH + '/Los_Angeles_Crime_Data_from_2020_to_Present.csv'):
     self.nodes = {}
     self.tracts = {}
+    self.precincts = {}
     self.bound_size = 150
 
     # import and clean arrest dataset
@@ -79,8 +81,9 @@ class Graph:
 
       # get boundary of LA  
       layer = fiona.open(shp_path)
-      precincts = [shape(geom['geometry']) for geom in layer]
-      LA_union = unary_union(precincts)
+      precincts = [(geom['properties']['OBJECTID'], shape(geom['geometry'])) for geom in layer]
+      print(precincts[0])
+      LA_union = unary_union([geo for (id, geo) in precincts])
 
       # create grid of nodes
       y_ind = 0
@@ -98,8 +101,16 @@ class Graph:
           n = Node((x_ind, y_ind), bnd_box, matches)
           pt = Point(n.center_lon, n.center_lat)
           # only add nodes inside LA
-          if pt.within(LA_union):
-            self.nodes[(x_ind, y_ind)] = n  
+          # if pt.within(LA_union):
+          #   self.nodes[(x_ind, y_ind)] = n
+          for (id, geo) in precincts:
+            if (pt.within(geo)):
+              n.precinct_ID = id
+              self.nodes[(x_ind, y_ind)] = n    
+              if id not in self.precincts.keys():
+                self.precincts[id] = {(x_ind, y_ind):n}
+              else:
+                self.precincts[id][(x_ind,y_ind)] = n
 
           x_ind += 1
           longitude = new_lon
@@ -157,10 +168,21 @@ class Graph:
         neighbors += pair
 
     return neighbors
+
+  def getNeighborsPrecinct(self, node):
+    neighbors = []
+    x,y = node.ID
+    opts = [(x+1,y), (x-1,y), (x,y+1), (x,y-1)]
+
+    for pair in opts:
+      if pair in self.precincts[node.precinct_ID].keys():
+        neighbors += pair
+
+    return neighbors
   
 
   def saveNodes(self, file_path):
-    pickle_out = open(file_path, 'a+')
+    pickle_out = open(file_path, 'wb+')
     pickle.dump(self.nodes, pickle_out)
     pickle_out.close()
     print("Saved pickle nodes")
