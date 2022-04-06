@@ -145,9 +145,9 @@ def compare_sims(store, real):
 
     return answer, (count_85, count_95, count_99)
 
-import pickle
+# import pickle
 
 
-with open('populated_nodes.pkl', 'rb') as f:
-    data = pickle.load(f)
-    print(data)
+# with open('populated_nodes.pkl', 'rb') as f:
+#     data = pickle.load(f)
+#     print(data)
