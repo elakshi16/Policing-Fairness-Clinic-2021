@@ -66,7 +66,7 @@ def bounds (mean, interval, stddev, length):
     return upperbound, lowerbound
 
 
-def compare(store, real):
+def compare_means(store, real):
     # input result ^ and real-world data result
     # output dictionary key: node & value: [sim mean, real mean, confidence]
     # compare mean and stddev(should be used to determine confidence) between simulations and data
@@ -98,4 +98,56 @@ def compare(store, real):
     else:
         confidence = '<85%'
 
-    return f" There is a {confidence} confident that our simulated data matches the real world data. "
+    return f" There is a {confidence} confident that the mean of our simulated data matches the mean of the real world data. "
+
+
+def compare_sims(store, real):
+
+    # Note the confidence interval numbers
+    confidence_85 = 1.440
+    confidence_95 = 1.960
+    confidence_99 = 2.576
+    length = len(store)
+
+    # number of nodes within each confidence interval
+    count_85 = 0
+    count_95 = 0
+    count_99 = 0
+
+    # Dictionary to store which nodes are in each confidence interval
+    answer = {}
+    for i in store:
+        answer.setdefault(i, (False, False, False))     
+    
+    # Loop through the nodes
+    for i in store:
+
+        # Find out the upper and lower bound for each confidence interval
+        upper_bound_85, lower_bound_85 = bounds(i['mean'], confidence_85, i['stddev'], length)
+        upper_bound_95, lower_bound_95 = bounds(i['mean'], confidence_95, i['stddev'], length)
+        upper_bound_99, lower_bound_99 = bounds(i['mean'], confidence_99, i['stddev'], length)
+
+        #Check each bound
+        if (lower_bound_99 <= real[i]) and (real[i] <= upper_bound_99):
+            count_85 += 1
+            count_95 += 1
+            count_99 += 1
+            answer[i] = (True, True, True)
+        elif (lower_bound_95 <= real[i]) and (real[i] <= upper_bound_95):
+            count_85 += 1
+            count_95 += 1
+            answer[i] = (True, True, False)
+        elif (lower_bound_85 <= real[i]) and (real[i] <= upper_bound_85):
+            count_85 += 1
+            answer[i] = (True, False, False)
+        else:
+            pass
+
+    return answer, (count_85, count_95, count_99)
+
+import pickle
+
+
+with open('populated_nodes.pkl', 'rb') as f:
+    data = pickle.load(f)
+    print(data)
