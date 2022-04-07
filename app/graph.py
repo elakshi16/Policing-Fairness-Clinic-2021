@@ -165,7 +165,7 @@ class Graph:
 
     for pair in opts:
       if pair in self.nodes.keys():
-        neighbors += pair
+        neighbors.append(pair)
 
     return neighbors
 
@@ -176,7 +176,7 @@ class Graph:
 
     for pair in opts:
       if pair in self.precincts[node.precinct_ID].keys():
-        neighbors += pair
+        neighbors.append(pair)
 
     return neighbors
   
