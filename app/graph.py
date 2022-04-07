@@ -165,7 +165,7 @@ class Graph:
 
     for pair in opts:
       if pair in self.nodes.keys():
-        neighbors += pair
+        neighbors.append(pair)
 
     return neighbors
 
@@ -176,7 +176,7 @@ class Graph:
 
     for pair in opts:
       if pair in self.precincts[node.precinct_ID].keys():
-        neighbors += pair
+        neighbors.append(pair)
 
     return neighbors
   
@@ -186,3 +186,17 @@ class Graph:
     pickle.dump(self.nodes, pickle_out)
     pickle_out.close()
     print("Saved pickle nodes")
+
+  def saveGraph(self, file_path):
+    pickle_out = open(file_path, 'wb+')
+    pickle.dump(self.__dict__, pickle_out)
+    pickle_out.close()
+    print("Saved pickle graph")
+
+  def loadGraph(self, file_path):
+    in_file = open(file_path, 'rb')
+    tmp = pickle.load(in_file)
+    in_file.close()
+    self.__dict__.update(tmp)
+
+  
