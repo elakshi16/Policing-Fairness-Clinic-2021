@@ -35,7 +35,7 @@ def sim_stddev(arrests):
     count = 0
     list_of_arrest_counts = arrests.values()
     for i in list_of_arrest_counts:
-        count += ((i - mean) ^ 2)
+        count += ((i - mean) ** 2)
     result = sqrt(count/(len(arrests)-1))
     return result
 
@@ -43,7 +43,7 @@ def nodal_stddev(list_of_simulations, node):
     mean = nodal_mean(list_of_simulations, node)
     count = 0
     for i in list_of_simulations:
-        count += ((i[node] - mean) ^ 2)
+        count += ((i[node] - mean) ** 2)
     result = sqrt(count/(len(list_of_simulations)-1))
     return result
 
