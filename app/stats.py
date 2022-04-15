@@ -128,17 +128,17 @@ def compare_sims(store, real):
         upper_bound_99, lower_bound_99 = bounds(i['mean'], confidence_99, i['stddev'], length)
 
         #Check each bound
-        if (lower_bound_99 <= real[i]) and (real[i] <= upper_bound_99):
+        if (lower_bound_85 <= real[i]) and (real[i] <= upper_bound_85):
             count_85 += 1
             count_95 += 1
             count_99 += 1
             answer[i] = (True, True, True)
         elif (lower_bound_95 <= real[i]) and (real[i] <= upper_bound_95):
-            count_85 += 1
+            count_99 += 1
             count_95 += 1
             answer[i] = (True, True, False)
-        elif (lower_bound_85 <= real[i]) and (real[i] <= upper_bound_85):
-            count_85 += 1
+        elif (lower_bound_99 <= real[i]) and (real[i] <= upper_bound_99):
+            count_99 += 1
             answer[i] = (True, False, False)
         else:
             pass
