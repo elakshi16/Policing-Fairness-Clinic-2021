@@ -140,6 +140,7 @@ def compare_sims(store, real):
         elif (lower_bound_85 <= real[node_id]) and (real[node_id] <= upper_bound_85):
             count_85 += 1
             answer[node_id] = (True, False, False)
+
         else:
             pass
 
