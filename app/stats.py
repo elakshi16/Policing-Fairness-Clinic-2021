@@ -1,4 +1,4 @@
-from cmath import sqrt
+from math import sqrt
 
 
 def mysum(arrests, patrols):
@@ -18,7 +18,7 @@ def mysum(arrests, patrols):
 
 def sim_mean(arrests):
     total_arrests = sum(arrests.values())
-    mean = total_arrests // len(arrests)
+    mean = total_arrests / len(arrests)
     return mean
 
 
@@ -26,7 +26,7 @@ def nodal_mean(list_of_simulations, node):
     total_arrests = 0
     for arrest in list_of_simulations:
         total_arrests += arrest[node] 
-    mean = total_arrests // len(list_of_simulations) 
+    mean = total_arrests / len(list_of_simulations) 
     return mean
 
 
@@ -51,11 +51,11 @@ def nodal_stddev(list_of_simulations, node):
 def result(list_of_simulations):
     store = {}
     for sim in list_of_simulations:
-        for node in sim:
+        for node in sim.keys():
             store.setdefault(node, {'mean': 0 , 'stddev': 0, 'values': []})
             store[node]['mean'] = nodal_mean(list_of_simulations, node)
             store[node]['stddev'] = nodal_stddev(list_of_simulations, node)
-            store[node]['values'].append(list_of_simulations[sim][node])
+            store[node]['values'].append(sim[node])
     return store
 
 
@@ -120,7 +120,7 @@ def compare_sims(store, real):
         answer.setdefault(i, (False, False, False))     
     
     # Loop through the nodes
-    for i in store:
+    for node_id, i in store.items():
 
         # Find out the upper and lower bound for each confidence interval
         upper_bound_85, lower_bound_85 = bounds(i['mean'], confidence_85, i['stddev'], length)
@@ -128,18 +128,18 @@ def compare_sims(store, real):
         upper_bound_99, lower_bound_99 = bounds(i['mean'], confidence_99, i['stddev'], length)
 
         #Check each bound
-        if (lower_bound_99 <= real[i]) and (real[i] <= upper_bound_99):
+        if (lower_bound_99 <= real[node_id]) and (real[node_id] <= upper_bound_99):
             count_85 += 1
             count_95 += 1
             count_99 += 1
-            answer[i] = (True, True, True)
-        elif (lower_bound_95 <= real[i]) and (real[i] <= upper_bound_95):
+            answer[node_id] = (True, True, True)
+        elif (lower_bound_95 <= real[node_id]) and (real[node_id] <= upper_bound_95):
             count_85 += 1
             count_95 += 1
-            answer[i] = (True, True, False)
-        elif (lower_bound_85 <= real[i]) and (real[i] <= upper_bound_85):
+            answer[node_id] = (True, True, False)
+        elif (lower_bound_85 <= real[node_id]) and (real[node_id] <= upper_bound_85):
             count_85 += 1
-            answer[i] = (True, False, False)
+            answer[node_id] = (True, False, False)
         else:
             pass
 

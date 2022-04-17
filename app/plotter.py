@@ -3,6 +3,9 @@ from matplotlib import cm
 import numpy as np
 
 def basic_plot(node_dict, save_file=False):
+    """
+    Takes in dictionary of {(x,y): scalar_value}
+    """
     ## Plot and save both outputs
     x = []
     y = []

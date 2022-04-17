@@ -133,7 +133,7 @@ class Graph:
       la_tracts = {}
       for tract in tracts_layer:
         tract_polygon = shape(tract['geometry'])
-        if tract_polygon.within(LA_city_polygon):
+        if tract_polygon.intersects(LA_city_polygon):
           tract_properties = tract['properties']
           la_tracts[tract_properties['TRACTCE10']] = ([], tract_properties, tract_polygon)
 
@@ -152,7 +152,17 @@ class Graph:
         tnodes = node_list
         totNodes = len(tnodes) 
         for node in tnodes:
-          self.nodes[node].population = (properties['POP'] // totNodes)
+          self.nodes[node].population = {
+            "POP": (properties['POP'] // totNodes),
+            "LATPOP_D": (properties['LATPOP_D'] // totNodes),
+            "WHIPOP_D": (properties['WHIPOP_D'] // totNodes),
+            "BLAPOP_D": (properties['BLAPOP_D'] // totNodes),
+            "AMIPOP_D": (properties['AMIPOP_D'] // totNodes),
+            "ASIPOP_D": (properties['ASIPOP_D'] // totNodes),
+            "HPIPOP_D": (properties['HPIPOP_D'] // totNodes),
+            "OTHPOP_D": (properties['OTHPOP_D'] // totNodes),
+            "MMRPOP_D": (properties['MMRPOP_D'] // totNodes),
+          }
       
       self.tracts = tracts_dict
 
