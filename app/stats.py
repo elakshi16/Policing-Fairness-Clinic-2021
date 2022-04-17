@@ -1,5 +1,5 @@
 from math import sqrt
-
+import random
 
 def mysum(arrests, patrols):
   #Patrols should be number of precints (start_loc) * days (* possibly patrols per day (num_trips))
@@ -107,7 +107,8 @@ def compare_sims(store, real):
     confidence_85 = 1.440
     confidence_95 = 1.960
     confidence_99 = 2.576
-    length = len(store)
+    randNode = random.choice(list(store.values()))
+    length = len(randNode['values'])
 
     # number of nodes within each confidence interval
     count_85 = 0
