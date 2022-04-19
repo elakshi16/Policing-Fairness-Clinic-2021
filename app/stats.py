@@ -147,8 +147,8 @@ def compare_sims(store, real):
         else:
             pass
 
-    # return answer, (count_85, count_95, count_99)
-    return answer, count_99
+    return answer, (count_85, count_95, count_99)
+    # return answer, count_99
 
 
 def similarity_score(store, real):
@@ -157,8 +157,6 @@ def similarity_score(store, real):
     for node_id, i in store.items():
         simList.append(int(i['mean']))
         realList.append(int(real[node_id]))
-    print(len(simList))
-    print(len(realList))
     similarity = 1 - spatial.distance.cosine(simList, realList)
     return similarity
 
