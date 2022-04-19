@@ -1,5 +1,6 @@
 from math import sqrt
 import random
+from scipy import spatial
 
 def mysum(arrests, patrols):
   #Patrols should be number of precints (start_loc) * days (* possibly patrols per day (num_trips))
@@ -98,7 +99,7 @@ def compare_means(store, real):
     else:
         confidence = '<85%'
 
-    return f" There is a {confidence} confident that the mean of our simulated data matches the mean of the real world data. "
+    return f" We are {confidence} confident that the mean of our simulated data matches the mean of the real world data. "
 
 
 def compare_sims(store, real):
@@ -117,8 +118,8 @@ def compare_sims(store, real):
 
     # Dictionary to store which nodes are in each confidence interval
     answer = {}
-    for i in store:
-        answer.setdefault(i, (False, False, False))     
+    for node in store:
+        answer.setdefault(node, (False, False, False))     
     
     # Loop through the nodes
     for node_id, i in store.items():
@@ -134,18 +135,33 @@ def compare_sims(store, real):
             count_95 += 1
             count_99 += 1
             answer[node_id] = (True, True, True)
-        elif (lower_bound_95 <= real[node_id]) and (real[node_id] <= upper_bound_95):
-            count_85 += 1
-            count_95 += 1
-            answer[node_id] = (True, True, False)
-        elif (lower_bound_85 <= real[node_id]) and (real[node_id] <= upper_bound_85):
-            count_85 += 1
-            answer[node_id] = (True, False, False)
+        
+        # elif (lower_bound_95 <= real[node_id]) and (real[node_id] <= upper_bound_95):
+        #     count_85 += 1
+        #     count_95 += 1
+        #     answer[node_id] = (True, True, False)
+        # elif (lower_bound_85 <= real[node_id]) and (real[node_id] <= upper_bound_85):
+        #     count_85 += 1
+        #     answer[node_id] = (True, False, False)
 
         else:
             pass
 
-    return answer, (count_85, count_95, count_99)
+    # return answer, (count_85, count_95, count_99)
+    return answer, count_99
+
+
+def similarity_score(store, real):
+    simList = []
+    realList = []
+    for node_id, i in store.items():
+        simList.append(int(i['mean']))
+        realList.append(int(real[node_id]))
+    print(len(simList))
+    print(len(realList))
+    similarity = 1 - spatial.distance.cosine(simList, realList)
+    return similarity
+
 
 # import pickle
 
